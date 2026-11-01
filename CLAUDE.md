@@ -78,9 +78,10 @@ date,bedtime,wake_time,duration_h,deep_h,rem_h,light_h,awake_h,score,notes,sourc
 
 ### `data/nutrition/log.csv`
 ```
-date,meal,description,kcal,protein_g,carbs_g,fat_g,notes
+date,time,meal,description,kcal,protein_g,carbs_g,fat_g,notes
 ```
-`meal` – `śniadanie`, `obiad`, `kolacja`, `przekąska`, `suplement`, `dzień` (podsumowanie dnia).
+- `time` – godzina posiłku `HH:MM`, jeśli znana (podana przez użytkownika albo wynika z kontekstu, np. godzina wiadomości przy „właśnie zjadłem”); nie zgaduj – brak godziny = puste pole. Przy wpisie bez godziny dopytaj krótko w potwierdzeniu.
+- `meal` – `śniadanie`, `obiad`, `kolacja`, `przekąska`, `suplement`, `dzień` (podsumowanie dnia).
 
 ### `data/log/journal.md`
 Wpisy chronologicznie, najnowsze na dole:

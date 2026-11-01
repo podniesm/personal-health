@@ -6,6 +6,7 @@ Kod wyjścia 0 = OK, 1 = znaleziono błędy.
 from __future__ import annotations
 
 import csv
+import re
 import sys
 from datetime import date
 from pathlib import Path
@@ -42,7 +43,7 @@ SCHEMAS: dict[str, tuple[list[str], list[str], list[str]]] = {
         ["date"],
     ),
     "nutrition/log.csv": (
-        ["date", "meal", "description", "kcal", "protein_g", "carbs_g", "fat_g", "notes"],
+        ["date", "time", "meal", "description", "kcal", "protein_g", "carbs_g", "fat_g", "notes"],
         ["kcal", "protein_g", "carbs_g", "fat_g"],
         [],
     ),
@@ -50,6 +51,7 @@ SCHEMAS: dict[str, tuple[list[str], list[str], list[str]]] = {
 
 ACTIVITY_TYPES = {"bieg", "rower", "pływanie", "siłownia", "spacer", "wędrówka", "narty", "inne"}
 FLAGS = {"", "L", "H"}
+TIME_RE = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
 
 
 def is_number(s: str) -> bool:
@@ -80,6 +82,8 @@ def validate(rel: str, header: list[str], numeric: list[str], dup_key: list[str]
                     errors.append(f"{rel}:{lineno}: data z przyszłości: {d}")
             except ValueError:
                 errors.append(f"{rel}:{lineno}: zła data '{d}' (oczekiwane YYYY-MM-DD)")
+            if "time" in row and row["time"].strip() and not TIME_RE.match(row["time"].strip()):
+                errors.append(f"{rel}:{lineno}: zła godzina '{row['time']}' (oczekiwane HH:MM)")
             for col in numeric:
                 v = row[col].strip()
                 if v and not is_number(v):
